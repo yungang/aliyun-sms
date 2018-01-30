@@ -35,8 +35,7 @@ class AliyunSMS(object):
 
         query_string = self.build_query_string()
         resp = requests.get(self.gateway + "?" + query_string).json()
-        model = resp.get("Model")
-        if model is not None:
+        if resp.get("Code") == "OK":
             return True
 
         self.app.logger.info("send sms to %s failed, reason: %s" % (self.phones[0], resp.get("Message")))
