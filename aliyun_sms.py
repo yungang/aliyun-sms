@@ -9,7 +9,7 @@ class AliyunSMS(object):
     def __init__(self, app):
         self.app = app
         self.format = app.config.get("ALIYUN_API_FORMAT") or "JSON"
-        self.version = "2016-09-27"
+        self.version = "2017-05-25"
         self.key = app.config["ALIYUN_API_KEY"]
         self.secret = app.config["ALIYUN_API_SECRET"]
         self.signature = ""
@@ -27,7 +27,7 @@ class AliyunSMS(object):
         self.phones = []
 
     def send_single(self, phone, sign, template, params):
-        self.action = "SingleSendSms"
+        self.action = "SendSms"
         self.phones.append(phone)
         self.sign = sign
         self.params = params
@@ -55,12 +55,12 @@ class AliyunSMS(object):
         query.append(("Action", self.action))
         query.append(("SignName", self.sign))
         query.append(("TemplateCode", self.template))
-        query.append(("RecNum", ",".join(self.phones)))
+        query.append(("PhoneNumbers", ",".join(self.phones)))
         params = "{"
         for param in self.params:
             params += "\"" + param + "\"" + ":" + "\"" + str(self.params[param]) + "\"" + ","
         params = params[:-1] + "}"
-        query.append(("ParamString", params))
+        query.append(("TemplateParam", params))
         query = sorted(query, key=lambda key: key[0])
         query_string = ""
         for item in query:
